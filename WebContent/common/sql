@@ -1,0 +1,58 @@
+SELECT COUNT(1) FROM  "TEST".PHOTO_BOARD;
+
+insert into photo_board(
+  	pb_num,
+  	pb_title,
+  	pb_content,
+  	pb_photo_name,
+  	pb_photo_path,
+  	credat,
+  	cretim
+  	)
+  	values(
+  	seq_pb_num.nextval,
+  	dodo,
+  	'ㅇㄹㅇ',
+  	'6)화면구현_평가지A.hwp',
+  	'153701380573200.hwp',
+  	TO_CHAR(SYSDATE, 'yyyymmdd') ,
+  	TO_CHAR(SYSDATE, 'hh24miss') 
+  	);
+call photo(1000);
+select * from (
+SELECT ROWnum rcnt, pb.* from (
+select * from photo_board
+order by pb_num DESC) pb
+where rownum<=20)
+where rcnt>=11;
+commit;
+
+-----------------
+CREATE or REPLACE PROCEDURE photo(max_num number)
+IS
+	be_num number := 0;
+begin
+	loop
+		exit when be_num = max_num;
+		be_num := be_num+1;
+		insert into PHOTO_BOARD(
+		pb_num,
+  		pb_title,
+ 	 	pb_content,
+  		pb_photo_name,
+  		pb_photo_path,
+  		credat,
+  		cretim
+  		)
+  		values(
+  		seq_pb_num.nextval,
+  		'제목' || be_num,
+  		'내용' || be_num,
+  		NULL,
+  		NULL,
+  		TO_CHAR(SYSDATE, 'yyyymmdd') ,
+  		TO_CHAR(SYSDATE, 'hh24miss') 
+  		);
+		end loop;
+
+end;

@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<jsp:include page="/common/head.jsp"></jsp:include>
 </head>
 <body>
 <form method="post" action="/photo/write" enctype="multipart/form-data">

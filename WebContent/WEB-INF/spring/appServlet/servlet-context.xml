@@ -22,7 +22,7 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.file.board" />
-	
+	<beans:bean id="photoBoardDAO" class="com.file.board.dao.impl.PhotoBoardDAOImpl" />
 	
 	
 </beans:beans>

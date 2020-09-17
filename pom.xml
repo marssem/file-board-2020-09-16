@@ -78,6 +78,18 @@
     <artifactId>spring-jdbc</artifactId>
     <version>4.3.18.RELEASE</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.tomcat/juli -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>juli</artifactId>
+    <version>6.0.53</version>
+</dependency>
 
 
 

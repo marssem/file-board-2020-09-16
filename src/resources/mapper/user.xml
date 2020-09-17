@@ -3,11 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
-  <select id="select" parameterType="int">
-    select * from user_info
+  <select id="select" parameterType="map">
+    select * from photo_board
   </select>
   
-  <insert id="insertFile">
+  <insert id="insertFile" parameterType="int">
   	insert into photo_board(
   	pb_num,
   	pb_title,
@@ -19,13 +19,23 @@
   	)
   	values(
   	seq_pb_num.nextval,
-  	${pbTitle},
-  	${pbContent},
-  	${pbPhotoName},
-  	${pbPhotoPath},
+  	'${pbTitle}',
+  	'${pbContent}',
+  	'${pbPhotoName}',
+  	'${pbPhotoPath}',
   	TO_CHAR(SYSDATE, 'yyyymmdd') ,
   	TO_CHAR(SYSDATE, 'hh24miss') 
-  	
   	)
   </insert>
+  <select id="selectPhotoBoardList" resultType="pb" parameterType="pb">
+  	select * from (
+SELECT ROWnum rcnt, pb.* from (
+select * from photo_board
+order by pb_num DESC) pb
+where rownum&lt;=#{page.endNum})
+where rcnt&gt;=#{page.startNum}
+  </select>
+  <select id="selectPhotoBoardCount" resultType="int">
+  	select count(1) from photo_board
+  </select>
 </mapper>

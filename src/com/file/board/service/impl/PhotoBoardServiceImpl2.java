@@ -7,7 +7,7 @@ import com.file.board.service.PhotoBoardService;
 import com.file.board.vo.PhotoBoardVO;
 
 @Service
-public class PhotoBoardServiceImpl2 implements PhotoBoardService {
+public abstract class PhotoBoardServiceImpl2 implements PhotoBoardService {
 
 	@Override
 	public int insertPhotoBoard(MultipartFile file, PhotoBoardVO pb) {
