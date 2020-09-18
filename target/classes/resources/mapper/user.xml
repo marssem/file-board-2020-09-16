@@ -6,6 +6,17 @@
   <select id="select" parameterType="map">
     select * from photo_board
   </select>
+  <select id="selectPhotoBoardforDelete" resultType="pb">
+  	select pb_photo_path from photo_board <!-- where pb_num in (351,352) -->
+  	<where >
+  		<foreach collection="array" item="pbNum" separator="or" open="(" close=")"> <!-- array로 보내온다면 array로 받을 수 있다  -->
+  			pb_num = #{pbNum}
+  		</foreach>
+  			and pb_photo_path is not null
+  	</where>
+  
+	
+  </select>
   
   <insert id="insertFile" parameterType="int">
   	insert into photo_board(
@@ -31,11 +42,50 @@
   	select * from (
 SELECT ROWnum rcnt, pb.* from (
 select * from photo_board
+<where>
+	<if test='pbTitle!=null and pbTitle!=""'>
+		and pb_title like '%' ||  #{pbTitle} || '%'
+	</if>
+	<if test='pbContent!=null and pbContent!=""'>
+		and pb_content like '%' ||  #{pbContent} || '%'
+	</if>
+	<if test='credat1!=null and credat1!=""'>
+		and credat &gt;= replace(#{credat1},'-','')
+	</if>
+	<if test='credat2!=null and credat2!=""'>
+		and credat &lt;= replace(#{credat2},'-','')
+	</if>
+</where>
 order by pb_num DESC) pb
 where rownum&lt;=#{page.endNum})
 where rcnt&gt;=#{page.startNum}
   </select>
   <select id="selectPhotoBoardCount" resultType="int">
   	select count(1) from photo_board
+  	<where>
+	<if test='pbTitle!=null and pbTitle!=""'>
+		and pb_title like '%' ||  #{pbTitle} || '%'
+	</if>
+	<if test='pbContent!=null and pbContent!=""'>
+		and pb_content like '%' ||  #{pbContent} || '%'
+	</if>
+	<if test='credat1!=null and credat1!=""'>
+		and credat &gt;= replace(#{credat1},'-','')
+	</if>
+	<if test='credat2!=null and credat2!=""'>
+		and credat &lt;= replace(#{credat2},'-','')
+	</if>
+</where>
   </select>
+  <delete id="deletePhotoBoard" parameterType="int">
+    delete photo_board where pb_num = ${pb_num}
+  </delete>
+  <update id="updatePhotoBoard" parameterType="int">
+  update photo_board set
+  	pb_title = #{pbTitle},
+  	pb_content = #{pbContent},
+  	pb_photo_name = #{pbPhotoName},
+  	pb_photo_path = #{pbPhotoPath}
+  where pb_num=#{pbNum}
+  </update>
 </mapper>

@@ -21,10 +21,16 @@ public class PhotoBoardController {
 	@RequestMapping(value="/photo/list",method = RequestMethod.GET)
 	public String goList(@ModelAttribute PhotoBoardVO pb,Model model){  //@ModelAttribute 생략가능 함.
 		/* model.addAttribute("pbList", pbService.selectPhotoBoardList(null)); */
-		System.out.println("this controll");
+		System.out.println(pb);
 		pbService.selectPhotoBoardList(pb, model);
-		
 		return "photo/list";
+	}
+	@RequestMapping(value="/photo/delete",method = RequestMethod.POST)
+	public String deletePhotoBoards(@RequestParam("pbNums")int[] pbNums){  //@ModelAttribute 생략가능 함.
+		/* model.addAttribute("pbList", pbService.selectPhotoBoardList(null)); */
+		pbService.deletePhotoBoards(pbNums);
+		
+		return "redirect:/photo/list?page.pageNum=1";
 	}
 	@RequestMapping(value="/photo/write",method = RequestMethod.GET)
 	public String goWrite(){
@@ -37,5 +43,15 @@ public class PhotoBoardController {
 		
 		pbService.insertPhotoBoard(file, pb);
 		return "redirect:/photo/list"; 
+	}
+	@RequestMapping(value="/photo/update",method = RequestMethod.GET)
+	public String goUpdate(){
+		return "photo/update";
+	}
+	
+	@RequestMapping(value="/photo/update",method = RequestMethod.POST)
+	public String doUpdate(@ModelAttribute PhotoBoardVO pb,@RequestParam("pbFile") MultipartFile file){
+		pbService.updatePhotoBoard(file, pb);
+		return "photo/update";
 	}
 }

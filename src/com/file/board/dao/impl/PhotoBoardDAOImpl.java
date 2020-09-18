@@ -20,9 +20,7 @@ public class PhotoBoardDAOImpl implements PhotoBoardDAO {
 	
 	@Override
 	public int insertBoard(MultipartFile file, PhotoBoardVO pb) {
-		System.out.println("dao!!");
 		try(SqlSession ss = ms.openSession()){
-			
 			return ss.insert("user.insertFile", pb);
 		}
 	}
@@ -31,7 +29,6 @@ public class PhotoBoardDAOImpl implements PhotoBoardDAO {
 	@Override
 	public List<PhotoBoardVO> selectPhotoBoardList(PhotoBoardVO pb) {
 		try(SqlSession ss = ms.openSession()){
-			System.out.println("dao list!!");
 			return ss.selectList("user.selectPhotoBoardList", pb);
 		}
 	}
@@ -40,8 +37,40 @@ public class PhotoBoardDAOImpl implements PhotoBoardDAO {
 	@Override
 	public int selectPhotoBoardCount(PhotoBoardVO pb) {
 		try(SqlSession ss = ms.openSession()){
-			System.out.println("dao count!!");
 			return ss.selectOne("user.selectPhotoBoardCount", pb);
+		}
+	}
+
+
+	
+
+	@Override
+	public List<PhotoBoardVO>  selectPhotoBoardsForDelete(int[] pbNums) {
+		try(SqlSession ss = ms.openSession()){
+			System.out.println("dao for delete");
+			return ss.selectList("user.selectPhotoBoardforDelete",pbNums);
+		}
+		
+	}
+
+
+	@Override
+	public int deletePhotoBoards(int[] pbNums) {
+		try(SqlSession ss = ms.openSession()){
+			int cnt = 0;
+			System.out.println("dao !!");
+			for(int pbNum:pbNums) {
+				cnt += ss.delete("user.deletePhotoBoard",pbNum);
+			}
+			return cnt;
+		}
+	}
+
+
+	@Override
+	public int updatePhotoBoard(MultipartFile file, PhotoBoardVO pb) {
+		try(SqlSession ss = ms.openSession()){
+			return ss.update("user.insertFile", pb);
 		}
 	}
 

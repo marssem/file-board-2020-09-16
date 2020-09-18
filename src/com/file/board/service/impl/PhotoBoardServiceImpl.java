@@ -17,6 +17,7 @@ import com.file.board.vo.PhotoBoardVO;
 
 @Service("pbService")
 public class PhotoBoardServiceImpl implements PhotoBoardService {
+	
 	@Autowired
 	private PhotoBoardDAO pbDAO;
 	private final String uploadPath = "C:\\java_study\\workspace\\file-board\\WebContent\\resources\\";
@@ -31,7 +32,6 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
 		String fileName = System.nanoTime() + extName;
 		pb.setPbPhotoName(orgFileName);
 		pb.setPbPhotoPath(fileName);
-		System.out.println("service!!");
 		int cnt = pbDAO.insertBoard(file, pb);
 		if(cnt==1) {
 			File f = new File(uploadPath+fileName);
@@ -53,7 +53,14 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
 		PageVO page = new PageVO();
 		if(page.getPageNum()==0) {
 			page.setPageNum(1);
+			System.out.println("page 1: "+page.getPageNum());
+		}else {
+			System.out.println("service pb : "+page.getPageNum());
+			page.setPageNum(page.getPageNum());
 		}
+		
+			System.out.println("page other : "+page.getPageNum());
+		
 		
 		
 		int startNum = (page.getPageNum()-1)*10+1;
@@ -80,6 +87,62 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
 		model.addAttribute("pbList", pbDAO.selectPhotoBoardList(pb));
 		
 		return null;
+	}
+
+	@Override
+	public int deletePhotoBoards(int[] pbNums) {
+		List<PhotoBoardVO> pbList = pbDAO.selectPhotoBoardsForDelete(pbNums);
+		System.out.println("service!!");
+		if(!pbList.isEmpty()) {
+			for(PhotoBoardVO pb:pbList) {
+				System.out.println("service pblist: "+pb);
+
+				String fileName = pb.getPbPhotoPath();
+				File f = new File(uploadPath+fileName);
+				System.out.println("service f : "+ f);
+				if(f.exists()) {
+					f.delete();
+				}
+			}
+		}
+		return pbDAO.deletePhotoBoards(pbNums);
+	}
+
+	@Override
+	public int updatePhotoBoard(MultipartFile file, PhotoBoardVO pb) {
+		PageVO page = new PageVO();
+		String orgFileName = file.getOriginalFilename();
+		String extName = orgFileName.substring(orgFileName.lastIndexOf("."));
+		String fileName = System.nanoTime() + extName;
+		pb.setPbPhotoName(orgFileName);
+		pb.setPbPhotoPath(fileName);
+		int cnt = pbDAO.updatePhotoBoard(file, pb);
+		if(cnt==1) {
+			int[] pbNum = {pb.getPbNum()};
+			List<PhotoBoardVO> pbList = pbDAO.selectPhotoBoardsForDelete(pbNum);
+			File f = new File(uploadPath+fileName);
+			if(!pbList.isEmpty()) {
+				for(PhotoBoardVO pbvo:pbList) {
+					System.out.println("service pblist: "+pb);
+
+					String newfileName = pb.getPbPhotoPath();
+					File fi = new File(uploadPath+newfileName);
+					System.out.println("service f : "+ f);
+					if(fi.exists()) {
+						fi.delete();
+					}
+				}
+			}
+			try {
+				file.transferTo(f);
+			} catch (IllegalStateException e) {
+				
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return cnt;
 	}
 
 }

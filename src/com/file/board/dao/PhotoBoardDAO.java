@@ -10,4 +10,7 @@ public interface PhotoBoardDAO {
 	public int insertBoard(MultipartFile file, PhotoBoardVO pb);
 	List<PhotoBoardVO> selectPhotoBoardList(PhotoBoardVO pb);
 	int selectPhotoBoardCount(PhotoBoardVO pb);
+	int deletePhotoBoards(int[] pbNums);
+	List<PhotoBoardVO> selectPhotoBoardsForDelete(int[] pbNums);
+	int updatePhotoBoard(MultipartFile file, PhotoBoardVO pb);
 }
